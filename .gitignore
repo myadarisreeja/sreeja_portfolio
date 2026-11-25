@@ -1,0 +1,23 @@
+# Node / Frontend
+node_modules/
+frontend/dist/
+.vite/
+*.local
+.env
+.env.*
+
+# Java / Maven / Backend
+backend/target/
+backend/data/
+*.jar
+*.war
+*.class
+hs_err_pid*
+
+# IDEs & OS
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+*.log
