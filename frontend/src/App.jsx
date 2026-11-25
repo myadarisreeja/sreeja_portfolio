@@ -33,17 +33,23 @@ export default function App() {
   }, [theme]);
 
   const loadPortfolio = useCallback(async () => {
+    if (import.meta.env.PROD && !import.meta.env.VITE_API_BASE_URL) {
+      setApiStatus({ online: false, database: 'Static Preview' });
+      return;
+    }
     try {
       const [data, health] = await Promise.all([
         portfolioApi.getPortfolio(),
         portfolioApi.getHealth(),
       ]);
-      setPortfolio(data);
-      setApiHealth(health);
-      setApiStatus({
-        online: true,
-        database: health?.database || 'H2',
-      });
+      if (data?.profile && Array.isArray(data?.projects)) {
+        setPortfolio(data);
+        setApiHealth(health);
+        setApiStatus({
+          online: true,
+          database: health?.database || 'H2',
+        });
+      }
     } catch {
       setApiStatus({ online: false, database: 'Offline' });
     }

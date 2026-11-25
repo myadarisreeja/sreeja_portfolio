@@ -13,13 +13,22 @@ async function request(path, options = {}) {
     return null;
   }
 
-  const data = await response.json().catch(() => null);
+  const contentType = response.headers.get('content-type') || '';
+  const data = contentType.includes('application/json')
+    ? await response.json().catch(() => null)
+    : null;
+
   if (!response.ok) {
     const error = new Error(data?.message || `Request failed (${response.status})`);
     error.status = response.status;
     error.fieldErrors = data?.fieldErrors || {};
     throw error;
   }
+
+  if (data === null) {
+    throw new Error('Backend API is unavailable (received non-JSON response).');
+  }
+
   return data;
 }
 
